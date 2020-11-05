@@ -1,0 +1,23 @@
+# replace with your preferred region
+aws_region = "us-east-2"
+
+new_relic_license_key = "<your license key>"
+
+#replace with the name of the key pair you will be using
+# (as it appears in the AWS console)
+ec2_keypair_name = "my_keypair"
+
+# uncomment/override the value below to configure the size
+# and capacity of the clusters
+
+# Zookeeper
+# zookeeper_instance_type = "t3a.small"
+# zookeeper_num_nodes = 1
+
+# Kafka
+# kafka_instance_type = "t3a.small"
+# kafka_num_brokers = 6
+
+# Docker Swarm (producer, consumer, and loadgen apps)
+# application_stack_instance_type = "t3a.large"
+# application_stack_num_nodes = 2

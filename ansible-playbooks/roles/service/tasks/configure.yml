@@ -1,0 +1,43 @@
+---
+    
+- name: Create data dir
+  file:
+    state: directory
+    path: "{{ service_data_dir }}"
+    owner: "{{ service_user }}"
+    group: "{{ service_user }}"
+  notify:
+    - "restart {{ service_name }}"
+    
+- name: Create log dir
+  file:
+    state: directory
+    path: "{{ service_log_dir }}"
+    owner: "{{ service_user }}"
+    group: "{{ service_user }}"
+  notify:
+    - "restart {{ service_name }}"
+
+- name: Create properties file
+  become: yes
+  template:
+    dest: "{{ service_properties_file }}"
+    owner: "{{ service_user }}"
+    group: "{{ service_user }}"
+    mode: 0755
+    src: "{{ service_properties_template }}"
+  notify:
+    - "restart {{ service_name }}"
+      
+- name: Create service
+  become: yes
+  template:
+    dest: "{{ service_file }}"
+    mode: 0755
+    owner: root
+    src: "service.j2"
+  notify:
+    - "reload {{ service_name }}"
+    - "restart {{ service_name }}"
+
+    

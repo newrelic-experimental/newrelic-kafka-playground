@@ -1,0 +1,74 @@
+---
+- name: Install New Relic Infrastructure on Zookeeper Nodes
+  hosts: zookeepernodes
+  become: yes
+  tags:
+    - zookeeper
+  roles:
+    - name: newrelic.newrelic-infra
+      vars:
+        nrinfragent_config:
+          license_key: "{{ new_relic_license_key }}"
+          log_file: /var/log/nr-infra.log
+          log_to_stdout: false
+          log_format: json
+          display_name: "{{ display_name }}"
+          custom_attributes:
+            project: "{{ project_name }}"
+            role: "{{ role }}"
+            zookeeper_my_id: "{{ my_id }}"
+            usecase: "kafka"
+    - name: logging
+      vars:
+        logging_tag_name: zookeeper
+        server_log: /var/log/zookeeper/server.log
+    - name: newrelic-kafka-integration
+    
+- name: Install New Relic Infrastructure on Kafka Brokers
+  hosts: kafkabrokers
+  become: yes
+  tags:
+    - kafkabrokers
+  roles:
+    - name: newrelic.newrelic-infra
+      vars:
+        nrinfragent_config:
+          license_key: "{{ new_relic_license_key }}"
+          log_file: /var/log/nr-infra.log
+          log_to_stdout: false
+          log_format: json
+          display_name: "{{ display_name }}"
+          custom_attributes:
+            project: "{{ project_name }}"
+            usecase: "kafka"
+            role: "{{ role }}"
+            kafka_broker_id: "{{ broker_id }}"
+    - name: logging
+      vars:
+        logging_tag_name: kafka
+        server_log: /var/log/kafka/server.log
+
+- name: Install New Relic Infrastructure on Swarm Nodes
+  hosts: swarm_nodes
+  become: yes
+  tags:
+    - swarm_nodes
+  roles:
+    - name: newrelic.newrelic-infra
+      vars:
+        nrinfragent_config:
+          license_key: "{{ new_relic_license_key }}"
+          log_file: /var/log/nr-infra.log
+          log_to_stdout: false
+          log_format: json
+          display_name: "{{ display_name }}"
+          custom_attributes:
+            project: "{{ project_name }}"
+            role: "{{ role }}"
+            usecase: "kafka"
+  tasks:
+    - name: Copy docker logging config
+      copy:
+        src: ./files/swarm_logs.yml
+        dest: /etc/newrelic-infra/logging.d/swarm_logs.yml
+        mode: 0666

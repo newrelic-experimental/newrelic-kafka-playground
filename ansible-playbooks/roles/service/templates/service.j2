@@ -1,0 +1,16 @@
+[Unit]
+Description={{ service_description }}
+After=network.target network-online.target remote-fs.target
+
+[Service]
+Type=simple
+User={{ service_user }}
+Group={{ service_user }}
+Environment="LOG_DIR={{ service_log_dir }}"
+Environment="JMX_PORT={{ service_jmx_port }}"
+ExecStart={{ service_start_command }}
+ExecStop={{ service_stop_command }}
+PIDFile=/var/run/{{ service_name }}.pid
+
+[Install]
+WantedBy=multi-user.target

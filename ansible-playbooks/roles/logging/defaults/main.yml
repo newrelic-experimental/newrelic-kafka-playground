@@ -1,0 +1,5 @@
+---
+logging_config_dir: /etc/newrelic-infra/logging.d
+logging_config_file: "{{ logging_config_dir}}/logs.yml"
+fluentbit_config_file: "{{ logging_config_dir }}/fluentbit.conf"
+kafka_log_parser_config: "{{ logging_config_dir }}/fluentbit.kafka.parser.conf"

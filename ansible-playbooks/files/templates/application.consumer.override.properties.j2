@@ -1,0 +1,1 @@
+bootstrap.servers={{ groups['kafkabrokers'] | map('extract', hostvars, 'private_ip') | list | zip(groups['kafkabrokers'] | map('extract', hostvars, 'advertised_listener_port')) | map('join', ':') | join(',') }}

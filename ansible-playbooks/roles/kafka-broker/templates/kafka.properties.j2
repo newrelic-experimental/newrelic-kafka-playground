@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+
+broker.id = {{ broker_id }}
+log.dirs = {{ service_data_dir }}
+zookeeper.connect = {{ groups['zookeepernodes'] | map('extract', hostvars, 'private_ip') | list | zip(groups['zookeepernodes'] | map('extract', hostvars, 'client_port')) | map('join', ':') | join(',') }}
+listeners = {{ listener_strings | join(',') }}
+advertised.listeners = {{ advertised_listener_strings | join(',') }}
+
+retention.ms = {{ kafka_retention_ms }}
+num.partitions = {{ kafka_num_partitions }}

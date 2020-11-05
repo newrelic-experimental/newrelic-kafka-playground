@@ -1,0 +1,6 @@
+---
+logs:
+  - name: server-logs
+    fluentbit:
+        config_file: {{ fluentbit_config_file }}
+        parsers_file: {{ kafka_log_parser_config }}

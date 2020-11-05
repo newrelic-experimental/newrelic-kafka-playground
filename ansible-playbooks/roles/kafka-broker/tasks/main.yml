@@ -1,0 +1,29 @@
+---
+- set_fact:
+    listener_strings: "{{ listener_strings }} + [ '{{ item.protocol }}://{{ item.host }}:{{ item.port }}' ]"
+  with_items: "{{ kafka_listeners }}"
+  vars:
+    listener_strings: []
+    
+- set_fact:
+    advertised_listener_strings: "{{ advertised_listener_strings }} + [ '{{ item.protocol }}://{{ item.host }}:{{ item.port }}' ]"
+  with_items: "{{ kafka_advertised_listeners }}"
+  vars:
+    advertised_listener_strings: []
+
+- include_role:
+    name: service
+  vars:
+    service_user: "{{ kafka_user}}"
+    service_home: "{{ kafka_home}}"
+    service_file: "{{ kafka_service_file }}"
+    service_data_dir: "{{ kafka_data_dir }}"
+    service_log_dir: "{{ kafka_log_dir }}"
+    service_properties_template: "{{ kafka_properties_template }}"
+    service_properties_file: "{{ kafka_properties_file }}"
+    service_name: "{{ kafka_service_name }}"
+    service_description: "{{ kafka_service_description }}"
+    service_start_command: "{{ kafka_start_command }}"
+    service_stop_command: "{{ kafka_stop_command }}"
+    service_jmx_port: "{{ kafka_jmx_port }}"
+    

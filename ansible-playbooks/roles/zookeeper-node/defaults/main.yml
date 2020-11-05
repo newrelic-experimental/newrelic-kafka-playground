@@ -1,0 +1,14 @@
+---
+zk_user: kafka
+zk_home: /opt/kafka
+zk_service_file: /etc/systemd/system/zookeeper.service
+zk_data_dir: /var/opt/zookeeper
+zk_log_dir: /var/log/zookeeper
+zk_properties_template: zookeeper.properties.j2
+zk_properties_file: "{{ zk_home }}/config/zookeeper.ansible.properties"
+zk_myid_file: "{{ zk_data_dir }}/myid"
+zk_service_name: zookeeper
+zk_service_description: Zookeeper (bundled with kafka)
+zk_start_command: "{{ zk_home }}/bin/zookeeper-server-start.sh {{ zk_properties_file }}"
+zk_stop_command: "{{ zk_home }}/bin/zookeeper-server-stop.sh"
+zk_jmx_port: 9997

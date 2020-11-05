@@ -1,0 +1,16 @@
+---
+
+- name: Install Chrony
+  apt:
+    name: chrony
+    state: latest
+    update_cache: yes
+
+- name: Add AWS ntp server to chrony config
+  lineinfile:
+    path: /etc/chrony/chrony.conf
+    insertbefore: 'BOF'
+    line: 'server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4'
+
+- name: Restart Chrony
+  command: '/etc/init.d/chrony restart'

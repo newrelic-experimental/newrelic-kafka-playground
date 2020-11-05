@@ -1,0 +1,13 @@
+---
+- name: Create Kafka Service
+  hosts: kafkabrokers
+  become: yes
+  roles:
+    - name: chrony
+    - name: kafka-broker
+      vars:
+        kafka_advertised_listeners:
+          - protocol: PLAINTEXT
+            host: "{{ private_ip }}"
+            port: "{{ advertised_listener_port }}"
+            

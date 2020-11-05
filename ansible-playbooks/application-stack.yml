@@ -1,0 +1,114 @@
+---
+
+- name: Install Docker and Chrony on All Swarm nodes
+  become: yes
+  hosts: swarm_nodes
+  tags:
+    - provision
+  roles:
+    - name: chrony
+    - name: docker
+
+- hosts: swarm_managers[0]
+  become: yes
+  tags:
+    - provision
+    - swarm
+  tasks:
+    - name: Get swarm status
+      shell: "docker info | awk '/Swarm: (.+)/ { print $2 }'"
+      register: swarm_status
+    - name: Create Swarm
+      command: "docker swarm init --advertise-addr {{ private_ip }}"
+      when: swarm_status.stdout != 'active'
+    - name: Get manager token
+      command: "docker swarm join-token -q manager"
+      register: manager_token
+    - name: Get worker token
+      command: "docker swarm join-token -q worker"
+      register: worker_token
+    
+- hosts: swarm_managers[1:]
+  become: yes
+  tags:
+    - provision
+    - swarm
+  tasks:
+    - name: Get swarm status
+      shell: "docker info | awk '/Swarm: (.+)/ { print $2 }'"
+      register: swarm_status
+    - name: Join swarm as manager
+      command: "docker swarm join --token {{ hostvars[groups['swarm_managers'][0]]['manager_token']['stdout'] }} {{ hostvars[groups['swarm_managers'][0]]['private_ip'] }}"
+      when: swarm_status.stdout != 'active'
+      
+- hosts: swarm_workers
+  become: yes
+  tags:
+    - provision
+    - swarm
+  tasks:
+    - name: Get swarm status
+      shell: "docker info | awk '/Swarm: (.+)/ { print $2 }'"
+      register: swarm_status
+    - name: Join swarm as worker
+      command: "docker swarm join --token {{ hostvars[groups['swarm_managers'][0]]['worker_token']['stdout'] }} {{ hostvars[groups['swarm_managers'][0]]['private_ip'] }}"
+      when: swarm_status.stdout != 'active'
+
+- hosts: swarm_managers[0]
+  become: yes
+  tags:
+    - registry
+  tasks:
+    - name: Get registry status
+      shell: "docker service inspect registry"
+      ignore_errors: true
+      register: registry_status
+    - name: Create registry service
+      command: "docker service create --name registry --publish published=5000,target=5000 registry:2"
+      when: registry_status.rc == 1
+      
+- hosts: kafkabrokers[0]
+  become: yes
+  tags:
+    - create_topic
+  tasks:
+    - name: Create Kafka Topic
+      command: "/opt/kafka/bin/kafka-topics.sh --create --topic application-messages --bootstrap-server localhost:9092"
+      
+- hosts: build_node
+  become: yes
+  tags:
+    - deploy
+  tasks:
+    - name: Synchronize application sources
+      synchronize:
+        src: ../applications
+        dest: /tmp/build/
+    - name: Create override compose file
+      template:
+        dest: "/tmp/build/applications/docker-compose.override.yml"
+        src: ./files/templates/docker-compose.override.j2
+        mode: 0755
+    - name: Create override producer properties
+      template:
+        dest: "/tmp/build/applications/producer.override.properties"
+        src: ./files/templates/producer.override.properties.j2
+        mode: 0755
+    - name: Create override application consumer properties
+      template:
+        dest: "/tmp/build/applications/application.consumer.override.properties"
+        src: ./files/templates/application.consumer.override.properties.j2
+        mode: 0755
+    - name: Build the stack
+      command:
+        chdir: /tmp/build/applications
+        cmd: docker-compose build
+    - name: Push images to the registry
+      command:
+        chdir: /tmp/build/applications
+        cmd: docker-compose push
+    - name: Deploy the stack
+      command:
+        chdir: /tmp/build/applications
+        cmd: docker stack deploy -c ./docker-compose.yml -c ./docker-compose.override.yml newrelic-kafka-playground-apps
+    
