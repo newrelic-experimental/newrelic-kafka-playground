@@ -2,11 +2,11 @@
 
 # New Relic Kafka Playground
 
-This project contains a set of Terraform configurations and Ansible playbooks that will deploy a complete Kafka cluster (including Zookeeper), as well as a set of producer and consumer applications running in a Docker Swarm cluster.   It is fully configured and instrumented with New Relic.
+This project contains a set of Terraform configurations and Ansible playbooks that will deploy to AWS a complete Kafka cluster (including Zookeeper), as well as a set of producer and consumer applications running in a Docker Swarm cluster.   It is fully configured and instrumented with New Relic.
 
 You'll see how New Relic provides observability into Kafka clusters as well as producer and consumer applications in a simulation of a real-world asynchronous messaging scenario.  It is completely configurable and extensible, allowing you to scale your cluster size and to modify/redeploy the applications to experiment with the features of the New Relic platform and how they relate to messages passed via Kafka streams.
 
-In addition to instrumenting Kafka with the [New Relic Kafka On-Host Integration](https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/kafka-monitoring-integration), all hosts and containers are instrumented with the [New Relic Infrastructure Agent](https://docs.newrelic.com/docs/infrastructure).  The applications are instrumented with [New Relic APM](https://docs.newrelic.com/docs/apm), and [Distributed Tracing](https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/get-started/introduction-distributed-tracing) has been enabled through the Kafka topics between producers and consumers
+In addition to instrumenting Kafka with the [New Relic Kafka On-Host Integration](https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/kafka-monitoring-integration), all hosts and containers are instrumented with the [New Relic Infrastructure Agent](https://docs.newrelic.com/docs/infrastructure), which also collects [Logs](https://newrelic.com/products/logs) from both the Kafka brokers as well as the producers and consumers.  The applications are instrumented with [New Relic APM](https://docs.newrelic.com/docs/apm), and [Distributed Tracing](https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/get-started/introduction-distributed-tracing) has been enabled between producers and consumers along with the capability of viewing [logs in context](https://docs.newrelic.com/docs/logs/enable-log-management-new-relic/configure-logs-context/configure-logs-context-apm-agents).
 
 ## Installation
 
