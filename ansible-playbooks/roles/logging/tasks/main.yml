@@ -1,0 +1,27 @@
+---
+- name: Create fluentbit config file
+  become: yes
+  template:
+    dest: "{{ fluentbit_config_file }}"
+    mode: 0755
+    src: fluentbit.conf.j2
+  notify:
+    - restart newrelic-infra
+    
+- name: Create fluentbit parser file
+  become: yes
+  copy:
+    src: fluentbit.kafka.parser.conf
+    dest: "{{ kafka_log_parser_config }}"
+    mode: 0755
+  notify:
+    - restart newrelic-infra
+    
+- name: Create logging config file
+  become: yes
+  template:
+    dest: "{{ logging_config_file }}"
+    mode: 0755
+    src: logs.yml.j2
+  notify:
+    - restart newrelic-infra

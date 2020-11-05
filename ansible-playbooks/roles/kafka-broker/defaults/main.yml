@@ -1,0 +1,25 @@
+---
+kafka_user: kafka
+kafka_home: /opt/kafka
+kafka_service_file: /etc/systemd/system/kafka.service
+kafka_data_dir: /var/opt/kafka
+kafka_log_dir: /var/log/kafka
+kafka_properties_template: kafka.properties.j2
+kafka_properties_file: "{{ kafka_home }}/config/kafka.ansible.properties"
+kafka_service_name: kafka
+kafka_service_description: Apache Kafka
+kafka_start_command: "{{ kafka_home }}/bin/kafka-server-start.sh {{ kafka_properties_file }}"
+kafka_stop_command: "{{ kafka_home }}/bin/kafka-server-stop.sh"
+kafka_num_partitions: "{{ groups['kafkabrokers'] | length }}"
+kafka_retention_ms: 3600000 # 1 hour
+kafka_jmx_port: 9997
+
+kafka_listeners:
+  - protocol: PLAINTEXT
+    host: 0.0.0.0
+    port: 9092
+    
+kafka_advertised_listeners:
+  - protocol: PLAINTEXT
+    host: 127.0.0.1
+    port: 9092

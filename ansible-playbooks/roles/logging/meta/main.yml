@@ -1,0 +1,20 @@
+galaxy_info:
+  author: New Relic
+  description: Sets up logging for a kakfa/zookeeper cluster
+  company: New Relic, Inc.
+
+  license: license (GPL-2.0-or-later, MIT, etc)
+
+  min_ansible_version: 2.9
+
+
+  galaxy_tags:
+    - kafka
+    - zookeeper
+    - monitoring
+
+# dependencies: 
+#   - role: newrelic.newrelic-infra
+    
+  
+  

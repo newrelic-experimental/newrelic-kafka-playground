@@ -1,0 +1,9 @@
+terraform.tfvars
+terraform.tfstate*
+.terraform
+terraform/**/output/*
+ansible.log
+tmpinventory
+tmp
+s3.backend.tf
+.DS_Store

@@ -1,0 +1,7 @@
+---
+- name: Create Zookeeper Service
+  hosts: zookeepernodes
+  become: yes
+  roles:
+    - name: chrony
+    - name: zookeeper-node

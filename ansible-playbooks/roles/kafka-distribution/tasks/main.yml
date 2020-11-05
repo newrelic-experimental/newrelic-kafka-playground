@@ -1,0 +1,33 @@
+---
+- name: Add kafka user
+  become: yes
+  user:
+    name: "{{ kafka_user }}"
+    comment: Created by ansible
+    
+- name: Download Kafka Distribution
+  become: yes
+  become_user: "{{ kafka_user }}"
+  get_url:
+    dest: "/home/{{ kafka_user }}/{{ kafka_download_filename }}"
+    url: "{{ kafka_download_url }}"
+    
+- name: Uncompress the kafka tar
+  become: yes
+  unarchive:
+    remote_src: yes
+    creates: "{{ kafka_versioned_home_dir }}"
+    dest: "{{ kafka_install_dir }}"
+    src: "/home/{{ kafka_user }}/{{ kafka_download_filename }}"
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_user }}"
+    
+- name: Symlink kafka home dir
+  become: yes
+  file:
+    path: "{{ kafka_home_dir }}"
+    src: "{{ kafka_versioned_home_dir }}"
+    force: yes
+    state: link
+    owner: "{{ kafka_user }}"
+    group: "{{ kafka_user }}"

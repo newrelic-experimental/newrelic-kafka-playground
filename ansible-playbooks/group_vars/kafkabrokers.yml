@@ -1,0 +1,5 @@
+zookeeper_client_port: 
+advertised_listener_port: 9092
+server_log: /var/opt/kafka/server.log
+logging_tag_name: kafka
+service_name: kafka.service

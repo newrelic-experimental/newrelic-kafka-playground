@@ -1,0 +1,61 @@
+# {{ ansible_managed }}
+
+version: '3.4'
+
+configs:
+  producer_properties:
+    file: ./producer.override.properties
+  consumer_properties:
+    file: ./application.consumer.override.properties
+  
+
+services:
+  producer:
+    image: localhost:5000/producer
+    environment:
+      NEW_RELIC_LICENSE_KEY: "{{ new_relic_license_key }}"
+      NEW_RELIC_APP_NAME: "newrelic-kafka-playground-producer"
+      NEW_RELIC_LOG_FILE_NAME: "STDOUT"
+      NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true"
+      NEW_RELIC_KAFKA_METRICS_AS_EVENTS_ENABLED: "true"
+      NEW_RELIC_LABELS: "project:{{ project_name }};usecase:kafka"
+      APPLICATION_MESSAGES_TOPIC_NAME: "application-messages"
+    configs:
+      - source: producer_properties
+        target: /var/webapp/config/producer.override.properties
+    logging:
+      options:
+        max-size: 10m
+        max-file: 10
+    deploy:
+      replicas: {{ 2 + groups['kafkabrokers'] | length  }}
+  
+  consumer:
+    image: localhost:5000/consumer
+    environment:
+      NEW_RELIC_LICENSE_KEY: "{{ new_relic_license_key }}"
+      NEW_RELIC_APP_NAME: "newrelic-kafka-playground-consumer"
+      NEW_RELIC_LOG_FILE_NAME: "STDOUT"
+      NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true"
+      NEW_RELIC_KAFKA_METRICS_AS_EVENTS_ENABLED: "true"
+      NEW_RELIC_LABELS: "project:{{ project_name }};usecase:kafka"
+      APPLICATION_MESSAGES_TOPIC_NAME: "application-messages"
+    configs:
+      - source: consumer_properties
+        target: /usr/local/app/config/application.consumer.override.properties
+    logging:
+      options:
+        max-size: 10m
+        max-file: 10
+    deploy:
+      replicas: {{ groups['kafkabrokers'] | length  }}
+  
+  loadgen:
+    image: localhost:5000/loadgen
+    logging:
+      options:
+        max-size: 10m
+        max-file: 10
+    deploy:
+      replicas: 1
+    command:  "-f locustfile.py --headless -u 500 -r 10 --loglevel ERROR -H http://producer:8080"

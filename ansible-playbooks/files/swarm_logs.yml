@@ -1,0 +1,6 @@
+logs:
+  # ingest all docker container logs on the host
+  - name: docker-logs
+    file: /var/lib/docker/containers/*/*.log
+    attributes:
+      logtype: docker

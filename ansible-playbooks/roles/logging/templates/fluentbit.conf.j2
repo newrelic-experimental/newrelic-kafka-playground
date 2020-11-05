@@ -1,0 +1,23 @@
+[INPUT]
+    Name tail
+    Tag {{ logging_tag_name }}.server
+    Path {{ server_log }}
+    Multiline On
+    Parser_Firstline kafka-log
+
+#[INPUT]
+#    Name systemd
+#    Tag {{ logging_tag_name }}.service
+#    Systemd_Filter _SYSTEMD_UNIT={{ service_name }}
+#    Parser kafka-log
+    
+[FILTER]
+    Name record_modifier
+    Match {{ logging_tag_name }}.server
+    Record logtype {{ logging_tag_name }}-server
+
+#[FILTER]
+#    Name record_modifier
+#    Match {{ logging_tag_name }}.service
+#    Record logtype {{ logging_tag_name }}-systemd
+    

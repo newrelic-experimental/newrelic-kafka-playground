@@ -1,0 +1,53 @@
+---
+integration_name: com.newrelic.kafka
+
+instances:
+  # This instance gives an example of autodiscovery of brokers with zookeeper
+  - name: kafka-metrics-zookeeper-discovery
+    command: metrics
+    arguments:
+      # A cluster name is required to uniquely identify this collection result in Insights
+      cluster_name: "{{ newrelic_kafka_integration_cluster_name }}"
+
+      # Override the kafka API version to target. Defaults to 1.0.0, which will work for all post-1.0.0 versions. Older versions of the API may be missing features.
+      kafka_version: "1.0.0"
+
+
+      # How to find brokers. Either "bootstrap" or "zookeeper"
+      autodiscover_strategy: "zookeeper"
+
+      # We are installing the agent on each zookeeper node, so just connect to localhost
+      zookeeper_hosts: '[{"host": "{{ newrelic_kafka_integration_zookeeper_host }}", "port": {{ newrelic_kafka_integration_zookeeper_client_port }} }]'
+
+      collect_broker_topic_data: true
+
+      topic_mode: "all"
+
+      collect_topic_size: true
+
+    # Additionally, custom labels can be added to further identify your data
+    labels:
+      usecase: kafka
+
+  # This instance gives an example of collecting inventory with the integration
+  - name: kafka-inventory
+    command: inventory
+    arguments:
+      cluster_name: "{{ newrelic_kafka_integration_cluster_name }}"
+      zookeeper_hosts: '[{"host": "{{ newrelic_kafka_integration_zookeeper_host }}", "port": {{ newrelic_kafka_integration_zookeeper_client_port }} }]'
+      topic_mode: 'all'
+    labels:
+      usecase: kafka
+
+  # Example configuration for collecting consumer offsets for the cluster
+  - name: kafka-consumer-offsets
+    command: consumer_offset
+    arguments:
+      cluster_name: "{{ newrelic_kafka_integration_cluster_name }}"
+      autodiscover_strategy: "zookeeper"
+      zookeeper_hosts: '[{"host": "{{ newrelic_kafka_integration_zookeeper_host }}", "port": {{ newrelic_kafka_integration_zookeeper_client_port }} }]'
+
+      # A regex pattern that matches the consumer groups to collect metrics from
+      consumer_group_regex: '.*'
+    labels:
+      usecase: kafka

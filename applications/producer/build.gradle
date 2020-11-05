@@ -1,0 +1,36 @@
+plugins {
+    id 'war'  
+}
+
+repositories {
+    jcenter()
+}
+
+def newrelicVersion = "6.1.0"
+
+configurations {
+    newrelicAgent
+}
+
+sourceSets.main.java.srcDirs += file('../common/src/main/java')
+
+// compileJava.options.compilerArgs.add '-Xlint:unchecked'
+
+dependencies {
+    implementation group: 'org.apache.kafka', name: 'kafka-clients', version: '2.6.0'
+    // implementation 'com.google.code.gson:gson:2.8.6'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    implementation group: 'com.newrelic.logging', name: 'logback', version: '2.0'
+    newrelicAgent group: 'com.newrelic.agent.java', name: 'newrelic-agent', version: newrelicVersion
+    implementation group: 'com.newrelic.agent.java', name: 'newrelic-api', version: newrelicVersion
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0' 
+    testImplementation 'junit:junit:4.12'
+}
+
+task copyAgent(type: Copy) {
+    from { configurations.newrelicAgent } into "$buildDir/libs"
+    rename ("newrelic-agent-${newrelicVersion}.jar", 'newrelic.jar')
+}
+
+war.dependsOn(copyAgent)

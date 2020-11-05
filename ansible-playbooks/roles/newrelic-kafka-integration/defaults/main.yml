@@ -1,0 +1,5 @@
+---
+newrelic_kafka_integration_config_file: /etc/newrelic-infra/integrations.d/kafka-config.yml
+newrelic_kafka_integration_cluster_name: newrelic-kafka-playground
+newrelic_kafka_integration_zookeeper_client_port: 2181
+newrelic_kafka_integration_zookeeper_host: localhost
