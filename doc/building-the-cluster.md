@@ -41,11 +41,17 @@ Navigate to the [project homepage](https://github.com/newrelic-experimental/newr
 ### Step 2: Install the Terraform CLI
 Follow the instructions in the Terrafrom tutorial to [install the Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli).
 
-### Step 3: Install Ansible
+### Step 3a: Install Ansible
 There are several ways to install Ansible which are outlined in the [documentation](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).
 However, the most foolproof way is to [install via `pip` within a Python virtual environment](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#virtual-environments) running Python version 3.6 or above.
 
 If you are receiving errors about missing or mismatched Python packages, particulary those related to OpenSSL and/or GnuPG, your Ansible installation and/or the underlying Python version are most likely the culprit.  Your best path forward from here would be to reinstall Ansible in a virtual environment.
+
+### Step 3b: Install the New Relic Infrastructure Role
+Once you have Ansible successfully installed, install the [New Relic Infrastructure role](https://galaxy.ansible.com/newrelic/newrelic-infra) from Ansible Galaxy:
+```bash
+> ansible-galaxy install newrelic.newrelic-infra
+```
 
 ### Step 4: Configure/Verify your AWS credentials
 The Terraform CLI uses the AWS API to create all of the infrastructure in the cluster.  Therefore, it requires the proper credentails to execute those API requests on your behalf.  View the [documentation for the Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs) to understand the various methods you can use to provide your credentials to the Terraform CLI.
