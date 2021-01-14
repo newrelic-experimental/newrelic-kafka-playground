@@ -105,7 +105,7 @@ Now we'll use Ansible to install and configure all of the software on the hosts 
 
 Run the following command:
 ```bash
-> ansible_playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem newrelic-infrastructure.yml
+> ansible-playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem newrelic-infrastructure.yml
 ```
 Notice that you must provide the path to the Ansible inventory file with the `-i` switch and the path to your private key with the `--private-key` switch.  This will be the case for any Ansible playbooks in this project.
 
