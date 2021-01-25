@@ -105,7 +105,7 @@ Now we'll use Ansible to install and configure all of the software on the hosts 
 
 Run the following command:
 ```bash
-> ansible_playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem newrelic-infrastructure.yml
+> ansible-playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem newrelic-infrastructure.yml
 ```
 Notice that you must provide the path to the Ansible inventory file with the `-i` switch and the path to your private key with the `--private-key` switch.  This will be the case for any Ansible playbooks in this project.
 
@@ -116,13 +116,13 @@ Verify that the hosts are reporting by navigating to the Entity Explorer in [New
 ### Step 2: Install Zookeeper
 Run the following command:
 ```bash
-> ansible_playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem zookeeper.yml
+> ansible-playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem zookeeper.yml
 ```
 
 ### Step 3: Install Kafka
 Run the following command:
 ```bash
-> ansible_playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem kafka-brokers.yml
+> ansible-playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem kafka-brokers.yml
 ```
 
 Verify that the [New Relic Kafka On-Host Integration](https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/kafka-monitoring-integration) is collecting data from the Kafka brokers:
@@ -151,7 +151,7 @@ A single Ansible playbook will do the following:
 To run it:
 
 ```bash
-> ansible_playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem application-stack.yml
+> ansible-playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem application-stack.yml
 ```
 
 Once the applications are deployed, verify that messages are passing through the topic:
@@ -164,7 +164,7 @@ Once the applications are deployed, verify that messages are passing through the
 If you'd like to experiment with features or simulate some other messaging use cases, simply edit the code in the `applications` directory and run the `application-stack.yml` playbook. By adding the `deploy` tag, it will only run the tasks that build and deploy the application.
 
 ```bash
-> ansible_playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem --tags "deploy" application-stack.yml
+> ansible-playbook -i ../terraform/playground/output/ansible_hosts.yml --private-key=path/to/your/key.pem --tags "deploy" application-stack.yml
 ```
 
 The source files are copied to the Swarm manager node, and the applications are built within containers there. There is no need to install anything additional on your control node.
