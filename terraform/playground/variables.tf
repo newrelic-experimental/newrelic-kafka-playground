@@ -13,7 +13,7 @@ variable "new_relic_license_key" {
 
 variable "project_name" {
   type    = string
-  default = "newrelic-kakfa-playground"
+  default = "newrelic-kafka-playground"
 }
 
 variable "vpc_id" {
