@@ -6,7 +6,7 @@ repositories {
     jcenter()
 }
 
-def newrelicVersion = "6.1.0"
+def newrelicVersion = "7.0.1"
 
 configurations {
     newrelicAgent

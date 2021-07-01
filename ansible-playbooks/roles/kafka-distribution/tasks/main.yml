@@ -5,12 +5,26 @@
     name: "{{ kafka_user }}"
     comment: Created by ansible
     
+- name: Get Apache mirrors
+  uri:
+    url: "{{ apache_closer_url }}"
+    method: "GET"
+  register: apache_mirrors
+
+- name: Set Download URL
+  set_fact:
+    download_url: "{{ apache_mirrors.json.preferred }}{{ apache_mirrors.json.path_info }}"
+
+- name: Print Download URL
+  debug:
+    var: download_url
+    
 - name: Download Kafka Distribution
   become: yes
   become_user: "{{ kafka_user }}"
   get_url:
     dest: "/home/{{ kafka_user }}/{{ kafka_download_filename }}"
-    url: "{{ kafka_download_url }}"
+    url: "{{ download_url }}"
     
 - name: Uncompress the kafka tar
   become: yes
