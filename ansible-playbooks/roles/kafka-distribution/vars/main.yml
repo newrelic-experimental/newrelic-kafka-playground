@@ -1,4 +1,4 @@
+apache_closer_url: "https://www.apache.org/dyn/closer.cgi?path=/kafka/{{ kafka_version }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz&as_json=1"
 kafka_download_filename: "kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
-kafka_download_url: "{{ kafka_download_mirror_prefix }}/{{ kafka_version }}/{{ kafka_download_filename }}"
-kafka_versioned_home_dir: "{{ kafka_install_dir }}/{{ kafka_download_filename | regex_replace('(kafka_[\\d\\.]+-[\\d\\.]+).tgz$', '\\1')}}"
+kafka_versioned_home_dir: "{{ kafka_install_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}"
 kafka_home_dir: "{{ kafka_install_dir }}/kafka"
